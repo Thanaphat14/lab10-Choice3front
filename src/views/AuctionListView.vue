@@ -4,9 +4,25 @@ import { type Auction } from '@/types'
 import { ref, onMounted } from 'vue'
 import AuctionService from '@/services/AuctionService'
 import { useRouter } from 'vue-router'
+import BaseInput from '@/components/BaseInput.vue'
 
 const router = useRouter()
 const auctions = ref<Auction[] | null>(null)
+const keyword = ref('')
+function updateKeyword (value: string) {
+  let queryFunction;
+  if (keyword.value === ''){
+    queryFunction = AuctionService.getAuctions()
+  }else {
+    queryFunction = AuctionService.getAuctionsByKeyword(keyword.value)
+  }
+  queryFunction.then((response) => {
+    auctions.value = response.data
+    console.log('auctions',auctions.value)
+  }).catch(() => {
+    router.push({ name: 'NetworkError'})
+  })
+}
 
 onMounted(() => {
   AuctionService.getAuctions()
@@ -21,9 +37,12 @@ onMounted(() => {
 
 <template>
   <h1>Auctions</h1>
-  <div class="flex flex-col items-center">
+  <main class="flex flex-col items-center">
+    <div class="w-64">
+      <BaseInput v-model="keyword" type="text" label="Search..." @input="updateKeyword" class="w-full" />
+    </div>
     <AuctionCard v-for="auction in auctions" :key="auction.id" :auction="auction" />
-  </div>
+  </main>
 </template>
 
 <style scoped>

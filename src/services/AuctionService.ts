@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios, { type AxiosResponse } from 'axios'
 
 const apiClient = axios.create({
   baseURL: 'http://localhost:8080/auction-items',
@@ -15,5 +15,9 @@ export default {
   },
   getAuction(id: number) {
     return apiClient.get(`/${id}`)
-  }
+  },
+  getAuctionsByKeyword(keyword: string):
+    Promise<AxiosResponse<AuctionItem[]>> {
+      return apiClient.get<AuctionItem[]>('/search?description=' + keyword)
+    }
 }
