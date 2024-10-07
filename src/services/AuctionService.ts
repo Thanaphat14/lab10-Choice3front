@@ -1,4 +1,4 @@
-import axios, { type AxiosResponse } from 'axios'
+import axios, { type AxiosResponse } from 'axios';
 
 const apiClient = axios.create({
   baseURL: 'http://localhost:8080/auction-items',
@@ -7,17 +7,16 @@ const apiClient = axios.create({
     Accept: 'application/json',
     'Content-Type': 'application/json'
   }
-})
+});
 
 export default {
   getAuctions() {
-    return apiClient.get(``)
+    return apiClient.get(``);
   },
   getAuction(id: number) {
-    return apiClient.get(`/${id}`)
+    return apiClient.get(`/${id}`);
   },
-  getAuctionsByKeyword(keyword: string):
-    Promise<AxiosResponse<AuctionItem[]>> {
-      return apiClient.get<AuctionItem[]>('/search?description=' + keyword)
-    }
+  getAuctionsByKeyword(description: string, type: string): Promise<AxiosResponse<Auction[]>> {
+    return apiClient.get<Auction[]>(`/search?description=${description}&type=${type}`);
+  }
 }
